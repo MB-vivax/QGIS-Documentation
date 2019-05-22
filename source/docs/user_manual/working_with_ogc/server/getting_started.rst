@@ -41,13 +41,20 @@ Configuration
 
 Once QGIS Server is installed, let's configure the environment and enable it.
 
-Install the Apache server in a separate virtual host listening on port ``80``.
+First, install the Apache server:
+
+.. code-block:: bash
+
+ sudo apt update
+ sudo apt install apache2
+
+Then create a separate virtual host listening on port ``80``.
 Enable the rewrite module to pass HTTP BASIC auth headers:
 
 .. code-block:: bash
 
  sudo a2enmod rewrite
- cat /etc/apache2/conf-available/qgis-server-port.conf
+ cat > /etc/apache2/conf-available/qgis-server-port.conf
  Listen 80
  sudo a2enconf qgis-server-port
 
@@ -94,12 +101,20 @@ variables as shown below:
 Start
 ^^^^^
 
-Now enable the virtual host and restart Apache:
+Now enable the virtual host, disable the default and restart Apache:
 
 .. code-block:: bash
 
  sudo a2ensite 001-qgis-server
+ sudo a2dissite 000-default
  sudo service apache2 restart
+
+If the apache does not restart, you might need to install and enable mod_fcgid manually
+
+.. code-block:: bash
+
+ sudo apt install libapache2-mod-fcgid
+ sudo a2enmod fcgid
 
 QGIS Server is now available at http://localhost/cgi-bin/qgis-server.cgi.
 
